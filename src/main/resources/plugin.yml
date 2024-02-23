@@ -1,0 +1,20 @@
+name: QuickName
+version: '${project.version}'
+main: net.derfla.quickname.QuickName
+api-version: '1.20'
+commands:
+  changecolor:
+    usage: /<command>
+    description: Set a colored name for players.
+    permission: quickname.changecolor
+  prefix:
+    usage: /<command>
+    description: Create and set prefixes
+    permission: quickname.prefix
+permissions:
+  quickname.changecolor:
+    default: false
+    description: Allows the player to change the color of players names.
+  quickname.prefix:
+    default: false
+    description: Allows the player to create and set prefixes for players.

@@ -1,7 +1,8 @@
 name: QuickName
 version: '${project.version}'
 main: net.derfla.quickname.QuickName
-api-version: '1.20'
+api-version: '1.21'
+description: A simple plugin to change name colors and add prefixes.
 commands:
   changecolor:
     usage: /<command>

@@ -8,8 +8,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+/**
+ * This class has the method onPlayerDeath
+ * which replaces the "normal" player name
+ * with the colored + prefix.
+ */
 public class PlayerDeathListener implements Listener {
 
+    /**
+     * This method replaces the "normal" player name
+     * with the colored + prefix.
+     */
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (NameChange.getColor(event.getPlayer()) == null) return;

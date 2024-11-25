@@ -3,10 +3,10 @@ package net.derfla.quickname.command;
 import net.derfla.quickname.QuickName;
 import net.derfla.quickname.file.QuickNameFile;
 import net.derfla.quickname.util.NameChange;
+import net.derfla.quickname.util.Styles;
+import net.derfla.quickname.util.UUIDHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,16 +19,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class has two methods, onCommand which is responsible for creating new and assigning prefixes,
+ * and onTabComplete which gives the player suggestions on what arguments to use when utilizing the command.
+ * Most of the actual prefix handling is passed on to the class NameChange.
+ */
 public class PrefixCommand implements TabExecutor {
 
     static Plugin plugin = QuickName.getInstance();
-    Style errorStyle = Style.style(NamedTextColor.RED, TextDecoration.BOLD);
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -37,12 +40,12 @@ public class PrefixCommand implements TabExecutor {
         if (file == null) {
             plugin.getLogger().severe("Could not find quickName.yml!");
             sender.sendMessage(Component.text("There seems to be a problem with the plugin setup. Please alert an admin!")
-                    .color(NamedTextColor.YELLOW));
+                    .style(Styles.INFOSTYLE));
             return true;
         }
         if (args.length == 0) {
             sender.sendMessage(Component.text("Invalid arguments! Please use list, set, create or remove!").
-                    style(errorStyle));
+                    style(Styles.ERRORSTYLE));
             return true;
         }
         switch (args[0].toLowerCase()) {
@@ -58,27 +61,28 @@ public class PrefixCommand implements TabExecutor {
                 Player subject = Bukkit.getPlayerExact(args[1]);
                 if (subject == null) {
                     sender.sendMessage(Component.text("Please provide an online player!")
-                            .style(errorStyle));
+                            .style(Styles.ERRORSTYLE));
                     return true;
                 }
+                String trimmedUUID = UUIDHandler.trim(subject.getUniqueId());
                 if (args.length == 2) {
-                    file.set("players." + subject.getName() + ".prefix", null);
+                    file.set("players." + trimmedUUID + ".prefix", null);
                     QuickNameFile.save();
                     sender.sendMessage(Component.text("Unset the prefix of " + subject.getName())
-                            .color(NamedTextColor.YELLOW));
+                            .style(Styles.INFOSTYLE));
                     NameChange.setCustomDisplayName(subject);
                     return true;
                 }
                 if (!file.contains("prefix." + args[2])) {
                     sender.sendMessage(Component.text("The prefix " + args[2] + " does not exist!")
-                            .style(errorStyle));
+                            .style(Styles.ERRORSTYLE));
                     return true;
                 }
-                file.set("players." + subject.getName() + ".prefix", args[2]);
+                file.set("players." + trimmedUUID + ".prefix", args[2]);
                 QuickNameFile.save();
                 NameChange.setCustomDisplayName(subject);
                 sender.sendMessage(Component.text("Set the prefix of " + subject.getName() + " to: ")
-                        .color(NamedTextColor.YELLOW)
+                        .style(Styles.INFOSTYLE)
                         .append(NameChange.getPrefix(subject)));
                 return true;
 
@@ -86,30 +90,30 @@ public class PrefixCommand implements TabExecutor {
                 // Create a new prefix
                 if (args.length != 5) {
                     sender.sendMessage(Component.text("Invalid amount of arguments!")
-                            .style(errorStyle));
+                            .style(Styles.ERRORSTYLE));
                     return true;
                 }
                 if (NameChange.parseColor(args[3]) == null) {
                     sender.sendMessage(Component.text("Please provide a color!")
-                            .style(errorStyle));
+                            .style(Styles.ERRORSTYLE));
                     return true;
                 }
 
                 NameChange.createPrefix(args[1], args[2], NameChange.parseColor(args[3]), Boolean.parseBoolean(args[4]));
                 sender.sendMessage(Component.text("Created the prefix: " + args[1])
-                        .color(NamedTextColor.YELLOW));
+                        .style(Styles.INFOSTYLE));
                 return true;
             case "remove":
                 // Remove a prefix
 
                 if (!file.contains("prefix." + args[0])) {
                     sender.sendMessage(Component.text("The prefix that you provided does not exist!")
-                            .style(errorStyle));
+                            .style(Styles.ERRORSTYLE));
                     return true;
                 }
             default:
                 sender.sendMessage(Component.text("Invalid argument! Please use list, set, create or remove!").
-                        style(errorStyle));
+                        style(Styles.ERRORSTYLE));
                 return true;
         }
     }

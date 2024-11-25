@@ -8,6 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/**
+ * This class has one method, onPlayerJoin. Which is responsible for
+ * replacing the original player name with the colorized one in the join message.
+ */
 public class PlayerJoinListener implements Listener {
 
     @EventHandler

@@ -8,6 +8,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * This class has one method, onPlayerQuit. Which is responsible for
+ * replacing the original player name with the colorized one in the quit message.
+ */
 public class PlayerQuitListener implements Listener {
 
     @EventHandler

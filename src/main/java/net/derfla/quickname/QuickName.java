@@ -17,6 +17,7 @@ public final class QuickName extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new AsyncPlayerChatListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
 
         QuickNameFile.setup();
         QuickNameFile.get().options().copyDefaults(true);
